@@ -4,9 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="shortcut icon" href="./assets/images/snail.jpg" type="image/x-icon">
     <title>Slowpoke Sports</title>
 </head>
 <body>
-    <h1>Welcome to Slowpoke Sports</h1>
+    <header class="mobile-header">
+        <div class="logo">
+            <a href="">
+                <img src="./assets/images/snail.jpg" alt="Slowpoke Sports logo of a snail">
+            </a>
+        </div>
+        <div class="menu-button">
+            <a href="javascript:mobileNavSlide()">
+                <img src="./assets/images/menu-button.svg" alt="">
+            </a>
+        </div>
+    </header>
+    <nav class="mobile-navigation mobile-navigation-hidden" id="mobile-navigation">
+        <ul class="navigation-list">
+            <li>
+                <a href="">
+                    NFL
+                </a>
+            </li>
+            <li>
+                <a href="">
+                    NCAAF
+                </a>
+            </li>
+            <li>
+                <a href="">
+                    Login
+                </a>
+            </li>
+            <li>
+                <a href="">
+                    Contact
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <script src="./assets/js/script.js"></script>
 </body>
 </html>
