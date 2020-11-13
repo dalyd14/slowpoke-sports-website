@@ -1,15 +1,14 @@
-console.log(nflNews)
-
 var loadNews = function(arr) {
+    $("#news").empty()
     var newsDivContainer = $("<div>").addClass("container")
     var newsDivRow = $("<div>").addClass("row")
     arr.forEach(element => {
-        var newsDivCol = $("<div>").addClass("col-12 news-col")
+        var newsDivCol = $("<div>").addClass("col-12 col-sm-6 col-md-4 col-lg-3 news-col")
             .html(loadNewsCard(element))
         newsDivRow.append(newsDivCol)
     });
     newsDivContainer.append(newsDivRow);
-    $("#nfl-news").append(newsDivContainer)
+    $("#news").append(newsDivContainer)
 }
 
 var loadNewsCard = function(news) {
@@ -32,5 +31,10 @@ var toggleTabs = function(id) {
     $("#" + id).addClass("active show")
 }
 
-loadNews(nflNews)
-toggleTabs("nfl-news")
+if (currentPage === "NFL") {
+    loadNews(nflNews)
+} else if (currentPage === "NCAAF") {
+    loadNews(ncaafNews)
+}
+
+toggleTabs("news")
