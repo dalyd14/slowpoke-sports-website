@@ -15,7 +15,13 @@ a {
 .navbar {
     border-bottom: 1px solid lightgray;
     background-color: white;
+    z-index: 100;
 }
 .navbar-brand img {
     height: 50px;
+}
+/* News Section */
+.news-col {
+    padding-top: 15px;
+    padding-bottom: 15px;
 }
