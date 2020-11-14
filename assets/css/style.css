@@ -27,8 +27,42 @@ a {
     padding-bottom: 15px;
 }
 
-.team-img {
-    height: 60px;
+/* Scores Section */
+.game-info-row {
+    display: flex;
+    justify-content: space-between;
+}
+.score-team-img {
+    height: 30px
+}
+.score-row {
+    border-bottom: 1px solid lightgray;
+    padding: 3px;
+}
+.score-row>div {
+    padding: 0;
+}
+.team-name, .team-rank, .score {
+    font-size: 15px;
+    margin: 0;
+}
+.team-info-row {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.score-row p {
+    font-size: 12px;
+}
+.quarter, .time, .network {
+    font-size: 13px;
+    margin: 0;
+    text-align: center;
+}
+.quarter-container, .time-container, .network-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Teams Section */
@@ -47,4 +81,7 @@ a {
 .team-row p, .team-row h5 {
     margin: 0;
     padding: 0;
+}
+.team-img {
+    height: 60px;
 }
