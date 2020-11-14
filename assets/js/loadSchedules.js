@@ -37,3 +37,7 @@ if (currentPage === "NFL") {
 } else if (currentPage === "NCAAF") {
     loadSchedules(NCAAFteams)
 }
+
+$.getJSON( "https://api.sportsdata.io/v3/nfl/scores/json/News?key=1f5045ebe0954d7a9038e019a0dd7266", function( data ) {
+    console.log(data)
+  });
