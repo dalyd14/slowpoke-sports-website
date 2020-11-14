@@ -119,7 +119,8 @@ var loadScoreRow = function(score, teams) {
         var quarter = $("<h5>").addClass("quarter").text(status)
     } else if (score.Status === "Scheduled") {
         var dateTime = moment(score.DateTime, "YYYY-MM-DDTH:mm:ss")
-        var quarter = $("<h5>").addClass("quarter").text(dateTime.format("M/DD h:mma"))
+        var quarter = $("<h5>").addClass("quarter").text(dateTime.format("M/DD"))
+        timeLeft = $("<h5>").addClass("time").text(dateTime.format("h:mm a"))
     }
 
     awayTeamRankDiv.append(awayTeamRank)
