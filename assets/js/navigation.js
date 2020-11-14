@@ -19,7 +19,7 @@ var changePage = function(id) {
         $("#" + id).addClass("active");
     } else if (currentPage === "NCAAF") {
         loadNews(ncaafNews)
-        getNCAAFteams()
+        getNCAAFdata()
         $("#" + id).addClass("active");
     }
 }
