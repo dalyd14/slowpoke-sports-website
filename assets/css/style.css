@@ -32,8 +32,11 @@ a {
     display: flex;
     justify-content: space-between;
 }
+.img-container {
+    text-align: center;
+}
 .score-team-img {
-    height: 30px
+    height: 35px
 }
 .score-row {
     border-bottom: 1px solid lightgray;
