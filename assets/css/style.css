@@ -30,3 +30,21 @@ a {
 .team-img {
     height: 60px;
 }
+
+/* Teams Section */
+.team-row {
+    border: 1px;
+    background-color: 	rgb(245,245,245);
+    border-radius: 5px;
+    padding: 3px;
+    margin-top: 7px;
+}
+.team-row div {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.team-row p, .team-row h5 {
+    margin: 0;
+    padding: 0;
+}

@@ -15,11 +15,11 @@ var changePage = function(id) {
     $("#navbar-list li a").removeClass("active");
     if (currentPage === "NFL") {
         loadNews(nflNews)
-        loadSchedules(NFLteams)
+        //loadSchedules(NFLteams)
         $("#" + id).addClass("active");
     } else if (currentPage === "NCAAF") {
         loadNews(ncaafNews)
-        loadSchedules(NCAAFteams)
+        getNCAAFteams()
         $("#" + id).addClass("active");
     }
 }
