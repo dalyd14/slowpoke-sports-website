@@ -14,7 +14,7 @@ a {
 
 /* Header */
 .navbar {
-    border-bottom: 1px solid lightgray;
+    /* border-bottom: 1px solid lightgray; */
     background-color: white;
     z-index: 100;
 }
@@ -46,6 +46,9 @@ a {
     font-size: 15px;
     margin: 0;
 }
+.lost {
+    color: gray
+}
 .team-info-row {
     display: flex;
     justify-content: start;
@@ -63,6 +66,9 @@ a {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+.game-info-row {
+    border-left: 1px solid lightgray;
 }
 
 /* Teams Section */
