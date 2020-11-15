@@ -18,6 +18,7 @@ var changePage = function(id) {
         clearContent("scores")
         clearContent("teams")
         getNFLnews()
+        getNFLdata()
         //loadSchedules(NFLteams)
         $("#" + id).addClass("active");
     } else if (currentPage === "NCAAF") {

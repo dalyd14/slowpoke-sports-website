@@ -31,11 +31,11 @@ var getNCAAFdata = function() {
 var getNFLdata = function() {
     $.getJSON( "https://api.sportsdata.io/v3/nfl/scores/json/Teams?key=1f5045ebe0954d7a9038e019a0dd7266", function( teamData ) {
         $.getJSON("https://api.sportsdata.io/v3/nfl/scores/json/Timeframes/current?key=1f5045ebe0954d7a9038e019a0dd7266", function(currentWeek) {
-            $.getJSON("https://api.sportsdata.io/v3/nfl/scores/json/Standings/" + currentWeek.ApiSeason + "?key=1f5045ebe0954d7a9038e019a0dd7266", function(currentStandings) {
+            $.getJSON("https://api.sportsdata.io/v3/nfl/scores/json/Standings/" + currentWeek[0].ApiSeason + "?key=1f5045ebe0954d7a9038e019a0dd7266", function(currentStandings) {
                 var TotalStandings = currentStandings.filter(team => team.Conference==="AFC")
                 var NFCstandings = currentStandings.filter(team => team.Conference==="NFC")
-                TotalStandings.scort((a, b) => (a.ConferenceRank - b.ConferenceRank))
-                NFCstandings.scort((a, b) => (a.ConferenceRank - b.ConferenceRank))
+                TotalStandings.sort((a, b) => (a.ConferenceRank - b.ConferenceRank))
+                NFCstandings.sort((a, b) => (a.ConferenceRank - b.ConferenceRank))
                 NFCstandings.forEach(team => TotalStandings.push(team))
                 console.log(TotalStandings)
             })
