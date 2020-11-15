@@ -14,7 +14,7 @@ var loadScoreRow = function(score, teams) {
 
     // Within the outside row there will be two column divs
     var teamsInfoDiv = $("<div>").addClass("col-10") // will hold team name, score and record
-    var gameInfoDiv = $("<div>").addClass("col-2 d-flex") // will hold quarter and time left
+    var gameInfoDiv = $("<div>").addClass("col-2 d-flex justify-content-center game-info-row") // will hold quarter and time left
     var gameInfoRowDiv = $("<div>").addClass("row no-gutters")
 
     // now create two rows that will go inside the first div
@@ -39,23 +39,21 @@ var loadScoreRow = function(score, teams) {
     // enter the rank for each team
     // first away team
     var awayTeamRankDiv = $("<div>").addClass("col-1 team-rank-container")
-    var awayTeamRank = $("<p>").addClass("team-rank").text(teams.find(team => team.TeamID===score.AwayTeamID).ApRank || "")
-    awayTeamRankDiv.append(awayTeamRank)
+    var awayTeamRank = $("<h6>").addClass("team-rank").text(teams.find(team => team.TeamID===score.AwayTeamID).ApRank || "")
+    
     // next home team
     var homeTeamRankDiv = $("<div>").addClass("col-1 team-rank-container")
-    var homeTeamRank = $("<p>").addClass("team-rank").text(teams.find(team => team.TeamID===score.HomeTeamID).ApRank || "")
-    homeTeamRankDiv.append(homeTeamRank)
+    var homeTeamRank = $("<h6>").addClass("team-rank").text(teams.find(team => team.TeamID===score.HomeTeamID).ApRank || "")
 
     // load in the team names for both teams
     // first away team
     var awayTeamNameDiv = $("<div>").addClass("col-7 team-name-container")
     var awayTeamName = $("<h5>").addClass("team-name").text(teams.find(team => team.TeamID===score.AwayTeamID).School)
-    awayTeamNameDiv.append(awayTeamName)
+    
     // first away team
     var homeTeamNameDiv = $("<div>").addClass("col-7 team-name-container")
     var homeTeamName = $("<h5>").addClass("team-name").text(teams.find(team => team.TeamID===score.HomeTeamID).School)
-    homeTeamNameDiv.append(homeTeamName)
-
+    
     // // load records
     // // first away team
     // var awayTeamRecordDiv = $("<div>").addClass("col-2 team-record-container")
@@ -72,11 +70,11 @@ var loadScoreRow = function(score, teams) {
     // first away team
     var awayTeamScoreDiv = $("<div>").addClass("col-2 team-score-container")
     var awayTeamScore = $("<h5>").addClass("score").text(score.AwayTeamScore)
-    awayTeamScoreDiv.append(awayTeamScore)
+    var homeWin = score.HomeTeamScore > score.AwayTeamScore
+    
     // first away team
     var homeTeamScoreDiv = $("<div>").addClass("col-2 team-score-container")
     var homeTeamScore = $("<h5>").addClass("score").text(score.HomeTeamScore)
-    homeTeamScoreDiv.append(homeTeamScore)
 
     // get the quarter and time
     // first the quarter
@@ -90,6 +88,16 @@ var loadScoreRow = function(score, teams) {
     }
     if (score.Status === "Final") {
         var quarter = $("<h5>").addClass("quarter").text("Final")
+        if (homeWin) {
+            awayTeamRank.addClass("lost")
+            awayTeamScore.addClass("lost")
+            awayTeamName.addClass("lost")
+
+        } else {
+            homeTeamRank.addClass("lost")
+            homeTeamScore.addClass("lost")
+            homeTeamName.addClass("lost")
+        }
     } else if (score.Status === "InProgress") {
         var status = ""
         switch (score.Period) {
@@ -111,8 +119,19 @@ var loadScoreRow = function(score, teams) {
         var quarter = $("<h5>").addClass("quarter").text(status)
     } else if (score.Status === "Scheduled") {
         var dateTime = moment(score.DateTime, "YYYY-MM-DDTH:mm:ss")
-        var quarter = $("<h5>").addClass("quarter").text(dateTime.format("M/DD h:mma"))
+        var quarter = $("<h5>").addClass("quarter").text(dateTime.format("M/DD"))
+        timeLeft = $("<h5>").addClass("time").text(dateTime.format("h:mm a"))
     }
+
+    awayTeamRankDiv.append(awayTeamRank)
+    homeTeamRankDiv.append(homeTeamRank)
+
+    awayTeamNameDiv.append(awayTeamName)
+    homeTeamNameDiv.append(homeTeamName)
+
+    awayTeamScoreDiv.append(awayTeamScore)
+    homeTeamScoreDiv.append(homeTeamScore)
+
     quaterDiv.append(quarter)
     timeLeftDiv.append(timeLeft)
     
