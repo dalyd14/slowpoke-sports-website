@@ -14,11 +14,17 @@ var changePage = function(id) {
     currentPage = id.replace("-link", "")
     $("#navbar-list li a").removeClass("active");
     if (currentPage === "NFL") {
-        loadNews(nflNews)
+        clearContent("news")
+        clearContent("scores")
+        clearContent("teams")
+        getNFLnews()
         //loadSchedules(NFLteams)
         $("#" + id).addClass("active");
     } else if (currentPage === "NCAAF") {
-        loadNews(ncaafNews)
+        //loadNews(ncaafNews)
+        clearContent("news")
+        clearContent("scores")
+        clearContent("teams")
         getNCAAFdata()
         $("#" + id).addClass("active");
     }
@@ -36,3 +42,5 @@ for (var i = 0; i < navigationLinks.length; i++) {
     listItem.append(listItemLink)
     $("#navbar-list").append(listItem)
 }
+
+changePage(currentPage)

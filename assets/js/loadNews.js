@@ -1,29 +1,37 @@
-var loadNews = function(arr) {
+var loadNews = function(arr, teams) {
     $("#news").empty()
     var newsDivContainer = $("<div>").addClass("container")
-    var newsDivRow = $("<div>").addClass("row")
     arr.forEach(element => {
-        var newsDivCol = $("<div>").addClass("col-12 col-sm-6 col-md-4 col-lg-3 news-col")
-            .html(loadNewsCard(element))
-        newsDivRow.append(newsDivCol)
+        var newsDivRow = loadNewsRow(element, teams)
+        newsDivContainer.append(newsDivRow);
     });
-    newsDivContainer.append(newsDivRow);
     $("#news").append(newsDivContainer)
+    toggleTabs("news")
 }
 
-var loadNewsCard = function(news) {
-    var newsCard = $("<div>").addClass("card")
-    var newsImg = $("<img>").addClass("card-img-top")
-    newsImg.attr("src", news.image)
+var loadNewsRow = function(news, teams) {
+    var newsDivRow = $("<div>").addClass("row non-gutters news-row")
 
-    var newsCardBody = $("<div>").addClass("card-body")
-    var newsTitle = $("<h5>").addClass("card-title").text(news.title)
-    var newsDescription = $("<p>").addClass("card-text").text(news.description)
+    var newsTeamImgContainer = $("<div>").addClass("col-3 d-flex align-items-center")
 
-    newsCardBody.append(newsTitle, newsDescription)
-    newsCard.append(newsImg, newsCardBody)
+    var newsTitleContainer = $("<div>").addClass("col-9 news-title")
+    var newsTitleRow = $("<div>").addClass("row no-gutters")
+    var newsTimeRow = $("<div>").addClass("row no-gutters")
 
-    return newsCard
+    newsTitleRow.html("<div class='row no-gutters'><h3>" + news.Title + "</h3></div>")
+    newsTimeRow.html("<div class='row no-gutters'><h6>" + moment(news.Updated, "YYYY-MM-DDTH:mm:ss").format("MM/DD/YYYY h:mm a") + "</h6></div>")
+
+    newsTitleContainer.append(newsTitleRow, newsTimeRow)
+
+    if(news.TeamID) {
+        newsTeamImgContainer.html("<img src='" + teams.filter(team => team.TeamID===news.TeamID)[0].WikipediaLogoUrl + "' class='news-team-img' alt='" + teams.filter(team => team.TeamID===news.TeamID)[0].FullName + " Logo'>")
+    } else {
+        newsTeamImgContainer.html("<img src='' class='' alt=''>")
+    }
+
+    newsDivRow.append(newsTeamImgContainer, newsTitleContainer)
+
+    return newsDivRow
 }
 
 var toggleTabs = function(id) {
@@ -31,10 +39,14 @@ var toggleTabs = function(id) {
     $("#" + id).addClass("active show")
 }
 
-if (currentPage === "NFL") {
-    loadNews(nflNews)
-} else if (currentPage === "NCAAF") {
-    loadNews(ncaafNews)
+var clearContent = function(id) {
+    $("#" + id).empty()
 }
 
-toggleTabs("news")
+// if (currentPage === "NFL") {
+//     loadNews(nflNews)
+// } else if (currentPage === "NCAAF") {
+//     loadNews(ncaafNews)
+// }
+
+// toggleTabs("news")
