@@ -6,7 +6,6 @@ var loadNews = function(arr, teams) {
         newsDivContainer.append(newsDivRow);
     });
     $("#news").append(newsDivContainer)
-    toggleTabs("news")
 }
 
 var loadNewsRow = function(news, teams) {
@@ -33,20 +32,3 @@ var loadNewsRow = function(news, teams) {
 
     return newsDivRow
 }
-
-var toggleTabs = function(id) {
-    $("#" + id).removeClass("active show")
-    $("#" + id).addClass("active show")
-}
-
-var clearContent = function(id) {
-    $("#" + id).empty()
-}
-
-// if (currentPage === "NFL") {
-//     loadNews(nflNews)
-// } else if (currentPage === "NCAAF") {
-//     loadNews(ncaafNews)
-// }
-
-// toggleTabs("news")

@@ -1,33 +1,28 @@
-var navigationLinks = [
-    'NFL',
-    'NCAAF'
-]
-
-var currentPage = navigationLinks[0]
-
 $("#navbar-list").on( "click","a", function(){
-    changePage($(this).attr("id"))
+    currentNav.currentLeague = $(this).attr("id").replace("-link", "")
+    localStorage.setItem('slowpokeNav', JSON.stringify(currentNav))
+    changePage(currentNav.currentLeague)
+})
+$("#myTab").on( "click","a", function(){
+    currentNav.currentTab = $(this).attr("id").replace("-tab", "")
+    localStorage.setItem('slowpokeNav', JSON.stringify(currentNav))
 })
 
-
 var changePage = function(id) {
-    currentPage = id.replace("-link", "")
     $("#navbar-list li a").removeClass("active");
-    if (currentPage === "NFL") {
+    if (id === "NFL") {
         clearContent("news")
         clearContent("scores")
         clearContent("teams")
         getNFLnews()
         getNFLdata()
-        //loadSchedules(NFLteams)
-        $("#" + id).addClass("active");
-    } else if (currentPage === "NCAAF") {
-        //loadNews(ncaafNews)
+        $("#" + id + "-link").addClass("active");
+    } else if (id === "NCAAF") {
         clearContent("news")
         clearContent("scores")
         clearContent("teams")
         getNCAAFdata()
-        $("#" + id).addClass("active");
+        $("#" + id + "-link").addClass("active");
     }
 }
 
@@ -44,4 +39,17 @@ for (var i = 0; i < navigationLinks.length; i++) {
     $("#navbar-list").append(listItem)
 }
 
-changePage(currentPage)
+var toggleTabs = function(id) {
+    $("#" + id).removeClass("active show")
+    $("#" + id).addClass("active show")
+    
+    $("#myTab a").removeClass("active")
+    $("#myTab #" + id + "-tab").addClass("active")
+}
+
+var clearContent = function(id) {
+    $("#" + id).empty()
+}
+
+changePage(currentNav.currentLeague)
+toggleTabs(currentNav.currentTab)

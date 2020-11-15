@@ -22,6 +22,7 @@ var getNCAAFdata = function() {
                 scoreDataFinal.forEach(game => {allScores.push(game)});
                 loadScores(allScores, teamData)
                 loadTeams(NCAAFteams)
+                console.log("loaded NCAAF teams: ", moment().format("h:mm"))
             })
         });
     });
@@ -31,7 +32,7 @@ var getNFLdata = function() {
     $.getJSON( "https://api.sportsdata.io/v3/nfl/scores/json/Teams?key=1f5045ebe0954d7a9038e019a0dd7266", function( teamData ) {
         $.getJSON("https://api.sportsdata.io/v3/nfl/scores/json/Timeframes/current?key=1f5045ebe0954d7a9038e019a0dd7266", function(currentWeek) {
             $.getJSON("https://api.sportsdata.io/v3/nfl/scores/json/Standings/" + currentWeek[0].ApiSeason + "?key=1f5045ebe0954d7a9038e019a0dd7266", function(currentStandings) {
-                // console.log(currentStandings, currentWeek)
+                console.log(currentStandings, currentWeek)
                 var totalStandings = currentStandings.filter(team => team.Conference==="AFC")
                 var NFCstandings = currentStandings.filter(team => team.Conference==="NFC")
                 totalStandings.sort((a, b) => (a.ConferenceRank - b.ConferenceRank))
@@ -51,6 +52,7 @@ var getNFLdata = function() {
                 scoreDataScheduled.forEach(game => {allScores.push(game)});
                 scoreDataFinal.forEach(game => {allScores.push(game)});
                 loadScores(allScores, teamData)
+                console.log("loaded NFL teams: ", moment().format("h:mm"))
             });
         })
 

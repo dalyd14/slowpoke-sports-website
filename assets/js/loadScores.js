@@ -2,9 +2,9 @@ var loadScores = function(scoresArr, teamsArr) {
     $("#scores").empty()
     var scoresDivContainer = $("<div>").addClass("container-fluid")
     scoresArr.forEach(element => {
-        if(currentPage==="NCAAF") {
+        if(currentNav.currentLeague==="NCAAF") {
             var scoreDivRow = loadNCAAFscoreRow(element, teamsArr)
-        } else if(currentPage==="NFL") {
+        } else if(currentNav.currentLeague==="NFL") {
             var scoreDivRow = loadNFLscoreRow(element, teamsArr)
         }
         scoresDivContainer.append(scoreDivRow)

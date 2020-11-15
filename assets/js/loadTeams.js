@@ -4,9 +4,9 @@ var loadTeams = function(arr, teams) {
     var currentNFLconf = "AFC"
     var firstEl = true
     arr.forEach(element => {
-        if(currentPage==="NCAAF"){
+        if(currentNav.currentLeague==="NCAAF"){
             var teamDivRow = loadNCAAFTeamRow(element)
-        } else if (currentPage==="NFL"){
+        } else if (currentNav.currentLeague==="NFL"){
             if(element.Conference != currentNFLconf || firstEl ) {
                 firstEl = false
                 currentNFLconf = element.Conference
@@ -57,7 +57,12 @@ var loadNFLTeamRow = function(team, teams) {
     teamDivRow = $("<div>").addClass("row no-gutters team-row")
 
     var confRankDiv = $("<div>").addClass("col-1 rank-container d-flex justify-content-center")
-    var confRank = $("<h5>").addClass("conf-rank").text(team.ConferenceRank)
+    var confRank = $("<h5>").addClass("conf-rank")
+    if (team.ConferenceRank!=0) {
+        confRank.text(team.ConferenceRank)
+    } else {
+        confRank.text("")
+    }
 
     var teamImgDiv = $("<div>").addClass("col-3 img-container d-flex justify-content-center")
     var teamImg = $("<img>")
