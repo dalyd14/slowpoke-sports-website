@@ -238,24 +238,11 @@ var loadNFLscoreRow = function(score, teams) {
             homeTeamName.addClass("lost")
         }
     } else if (score.Status === "InProgress") {
-        var status = ""
-        switch (score.Period) {
-            case "1":
-                status = "1st Qtr";
-                break;
-            case "2":
-                status = "2nd Qtr";
-                break;
-            case "3":
-                status = "3rd Qtr";
-                break;
-            case "4":
-                status = "4th Qtr";
-                break;
-            default:
-                status = score.Period
+        if (score.IsOvertime || score.QuarterDescription==="Half") {
+            var quarter = $("<h5>").addClass("quarter").text(score.QuarterDescription)
+        } else {
+            var quarter = $("<h5>").addClass("quarter").text(score.QuarterDescription + " Qtr")
         }
-        var quarter = $("<h5>").addClass("quarter").text(status)
     } else if (score.Status === "Scheduled") {
         var dateTime = moment(score.DateTime, "YYYY-MM-DDTH:mm:ss")
         var quarter = $("<h5>").addClass("quarter").text(dateTime.format("M/DD"))
