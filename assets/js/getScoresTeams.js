@@ -20,7 +20,6 @@ var getNCAAFdata = function() {
                 scoreDataInProgress.forEach(game => {allScores.push(game)});
                 scoreDataScheduled.forEach(game => {allScores.push(game)});
                 scoreDataFinal.forEach(game => {allScores.push(game)});
-                console.log(allScores)
                 loadScores(allScores, teamData)
                 loadTeams(NCAAFteams)
             })
@@ -32,13 +31,27 @@ var getNFLdata = function() {
     $.getJSON( "https://api.sportsdata.io/v3/nfl/scores/json/Teams?key=1f5045ebe0954d7a9038e019a0dd7266", function( teamData ) {
         $.getJSON("https://api.sportsdata.io/v3/nfl/scores/json/Timeframes/current?key=1f5045ebe0954d7a9038e019a0dd7266", function(currentWeek) {
             $.getJSON("https://api.sportsdata.io/v3/nfl/scores/json/Standings/" + currentWeek[0].ApiSeason + "?key=1f5045ebe0954d7a9038e019a0dd7266", function(currentStandings) {
-                var TotalStandings = currentStandings.filter(team => team.Conference==="AFC")
+                // console.log(currentStandings, currentWeek)
+                var totalStandings = currentStandings.filter(team => team.Conference==="AFC")
                 var NFCstandings = currentStandings.filter(team => team.Conference==="NFC")
-                TotalStandings.sort((a, b) => (a.ConferenceRank - b.ConferenceRank))
+                totalStandings.sort((a, b) => (a.ConferenceRank - b.ConferenceRank))
                 NFCstandings.sort((a, b) => (a.ConferenceRank - b.ConferenceRank))
-                NFCstandings.forEach(team => TotalStandings.push(team))
-                console.log(TotalStandings)
+                NFCstandings.forEach(team => totalStandings.push(team))
+                loadTeams(totalStandings, teamData)
             })
+            $.getJSON( "https://api.sportsdata.io/v3/nfl/scores/json/ScoresByWeek/" + currentWeek[0].ApiSeason + "/" + currentWeek[0].Week + "?key=1f5045ebe0954d7a9038e019a0dd7266", function( scoreData ) {
+                var allScores = []
+                var scoreDataInProgress = scoreData.filter(game => game.Status==="InProgress")
+                var scoreDataFinal = scoreData.filter(game => game.Status==="Final")
+                var scoreDataScheduled = scoreData.filter(game => game.Status==="Scheduled")
+                scoreDataInProgress.sort((a, b) => (moment(a.DateTime, "YYYY-MM-DDTH:mm:ss") - moment(b.DateTime, "YYYY-MM-DDTH:mm:ss")))
+                scoreDataFinal.sort((a, b) => (moment(a.DateTime, "YYYY-MM-DDTH:mm:ss") - moment(b.DateTime, "YYYY-MM-DDTH:mm:ss")))
+                scoreDataScheduled.sort((a, b) => (moment(a.DateTime, "YYYY-MM-DDTH:mm:ss") - moment(b.DateTime, "YYYY-MM-DDTH:mm:ss")))
+                scoreDataInProgress.forEach(game => {allScores.push(game)});
+                scoreDataScheduled.forEach(game => {allScores.push(game)});
+                scoreDataFinal.forEach(game => {allScores.push(game)});
+                loadScores(allScores, teamData)
+            });
         })
 
         // var currentWeekDetails = null        
