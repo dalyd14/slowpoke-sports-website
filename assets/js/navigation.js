@@ -7,6 +7,11 @@ $("#myTab").on( "click","a", function(){
     currentNav.currentTab = $(this).attr("id").replace("-tab", "")
     localStorage.setItem('slowpokeNav', JSON.stringify(currentNav))
 })
+$(".navbar-collapse").on("click", "ul li a", function(){
+    if($("div.navbar-collapse").hasClass("show")){
+        $('.navbar-toggler').click();
+    }
+});
 
 var changePage = function(id) {
     $("#navbar-list li a").removeClass("active");
