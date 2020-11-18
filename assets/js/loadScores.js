@@ -226,18 +226,6 @@ var loadSportsioNCAAFscoreRow = function(score, teams) {
     // first away team
     var homeTeamNameDiv = $("<div>").addClass("col-7 team-name-container")
     var homeTeamName = $("<h5>").addClass("team-name").text(teams.find(team => team.TeamID===score.HomeTeamID).School)
-    
-    // // load records
-    // // first away team
-    // var awayTeamRecordDiv = $("<div>").addClass("col-2 team-record-container")
-    // var awayRecord = teams.find(team => team.TeamID===score.AwayTeamID).Wins + " - " + teams.find(team => team.TeamID===score.AwayTeamID).Losses
-    // var awayTeamRecord = $("<p>").addClass("team-record").text(awayRecord)
-    // awayTeamRecordDiv.append(awayTeamRecord)
-    // // next home team
-    // var homeTeamRecordDiv = $("<div>").addClass("col-2 team-record-container")
-    // var homeRecord = teams.find(team => team.TeamID===score.HomeTeamID).Wins + " - " + teams.find(team => team.TeamID===score.HomeTeamID).Losses
-    // var homeTeamRecord = $("<p>").addClass("team-record").text(homeRecord)
-    // homeTeamRecordDiv.append(homeTeamRecord)
 
     // get the scores
     // first away team

@@ -57,7 +57,7 @@ var getEspnNcaafScores = function(currentWeekDetails, NCAAFteams, group, limit) 
         scoreDataScheduled.forEach(game => {allScores.push(game)});
         scoreDataFinal.forEach(game => {allScores.push(game)});
         loadScores(allScores, NCAAFteams, "ESPN")
-        loadTeams(NCAAFteams)
+        loadTeams(NCAAFteams, "ESPN")
         console.log("loaded NCAAF teams: ", moment().format("h:mm"))        
     })
 }
@@ -77,13 +77,12 @@ var getSportsioNcaafTeams = function() {
         unRankedTeams.forEach(team => NCAAFteams.push(team))
         $.getJSON( "https://api.sportsdata.io/v3/cfb/scores/json/CurrentSeasonDetails?key=d43bba91fb3e469cbd7ad2e109656d69", function( seasonData ) {
             currentWeekDetails = seasonData
-            getEspnNcaafScores(currentWeekDetails, NCAAFteams, 80, 900)
-            //getSportsioNcaafScores(currentWeekDetails, NCAAFteams)
+            getSportsioNcaafScores(currentWeekDetails, NCAAFteams, teamData)
         });
     });
 }
 
-var getSportsioNcaafScores = function(currentWeekDetails, NCAAFteams) {
+var getSportsioNcaafScores = function(currentWeekDetails, NCAAFteams, teamData) {
     $.getJSON( "https://api.sportsdata.io/v3/cfb/scores/json/GamesByWeek/" + currentWeekDetails.Season + "/" + currentWeekDetails.ApiWeek + "?key=d43bba91fb3e469cbd7ad2e109656d69", function( scoreData ) {
         var allScores = []
         scoreData = scoreData.filter(game => (NCAAFteams.some(team => team.TeamID === game.HomeTeamID) || NCAAFteams.some(team => team.TeamID === game.AwayTeamID)))
@@ -98,7 +97,7 @@ var getSportsioNcaafScores = function(currentWeekDetails, NCAAFteams) {
         scoreDataScheduled.forEach(game => {allScores.push(game)});
         scoreDataFinal.forEach(game => {allScores.push(game)});
         loadScores(allScores, teamData, "SportsIO")
-        loadTeams(NCAAFteams)
+        loadTeams(NCAAFteams, "SportsIO")
         console.log("loaded NCAAF teams: ", moment().format("h:mm"))
     })
 }
@@ -112,7 +111,7 @@ var getNFLdata = function() {
                 totalStandings.sort((a, b) => (a.ConferenceRank - b.ConferenceRank))
                 NFCstandings.sort((a, b) => (a.ConferenceRank - b.ConferenceRank))
                 NFCstandings.forEach(team => totalStandings.push(team))
-                loadTeams(totalStandings, teamData)
+                loadTeams(totalStandings, "ESPN", teamData)
             })
             getEspnNflScores(currentWeek, teamData)
             // getSportsioNflScores(currentWeek, teamData)
