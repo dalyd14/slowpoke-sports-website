@@ -123,8 +123,12 @@ var loadNCAAFscoreRow = function(score, teams) {
         var quarter = $("<h5>").addClass("quarter").text(status)
     } else if (score.Status === "Scheduled") {
         var dateTime = moment(score.DateTime, "YYYY-MM-DDTH:mm:ss")
-        var quarter = $("<h5>").addClass("quarter").text(dateTime.format("M/DD"))
         timeLeft = $("<h5>").addClass("time").text(dateTime.format("h:mm a"))
+        if (!dateTime._isValid) {
+            dateTime = moment(score.Day, "YYYY-MM-DDTH:mm:ss")
+            timeLeft.text("TBD")
+        }
+        var quarter = $("<h5>").addClass("quarter").text(dateTime.format("M/DD"))
     }
 
     awayTeamRankDiv.append(awayTeamRank)
@@ -212,7 +216,7 @@ var loadNFLscoreRow = function(score, teams) {
     // first away team
     var awayTeamScoreDiv = $("<div>").addClass("col-2 team-score-container")
     var awayTeamScore = $("<h5>").addClass("score").text(score.AwayScore)
-    var homeWin = score.HomeTeamScore > score.AwayTeamScore
+    var homeWin = score.HomeScore > score.AwayScore
     
     // first away team
     var homeTeamScoreDiv = $("<div>").addClass("col-2 team-score-container")

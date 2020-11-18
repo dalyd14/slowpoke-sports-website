@@ -3,11 +3,20 @@ var NFLteams = []
 
 var getNCAAFdata = function() {
     $.getJSON( "https://api.sportsdata.io/v3/cfb/scores/json/Teams?key=d43bba91fb3e469cbd7ad2e109656d69", function( teamData ) {
-        var currentWeekDetails = null        
+        var currentWeekDetails = null
+        var rankedTeams = teamData.filter(team => team.ApRank!=null)
+        rankedTeams.sort(function (x, y) {
+            return x.ApRank - y.ApRank
+        })
+        var unRankedTeams = teamData.filter(team => team.ConferenceID!=null && team.ApRank===null)
+        unRankedTeams.sort(function (x, y) {
+            return (y.Wins/y.Losses) - (x.Wins/x.Losses);
+        });
+        rankedTeams.forEach(team => NCAAFteams.push(team))
+        unRankedTeams.forEach(team => NCAAFteams.push(team))
         $.getJSON( "https://api.sportsdata.io/v3/cfb/scores/json/CurrentSeasonDetails?key=d43bba91fb3e469cbd7ad2e109656d69", function( seasonData ) {
             currentWeekDetails = seasonData
             $.getJSON( "https://api.sportsdata.io/v3/cfb/scores/json/GamesByWeek/" + currentWeekDetails.Season + "/" + currentWeekDetails.ApiWeek + "?key=d43bba91fb3e469cbd7ad2e109656d69", function( scoreData ) {
-                NCAAFteams = teamData.filter(team => team.ConferenceID!=null)
                 var allScores = []
                 scoreData = scoreData.filter(game => (NCAAFteams.some(team => team.TeamID === game.HomeTeamID) || NCAAFteams.some(team => team.TeamID === game.AwayTeamID)))
                 scoreData = scoreData.filter(game => (game.Status!="Canceled" && game.Status!="Postponed"))
@@ -51,7 +60,7 @@ var getNFLdata = function() {
                 scoreDataScheduled.forEach(game => {allScores.push(game)});
                 scoreDataFinal.forEach(game => {allScores.push(game)});
                 loadScores(allScores, teamData)
-                console.log("loaded NFL teams: ", moment().format("h:mm"), allScores)
+                console.log("loaded NFL teams: ", moment().format("h:mm"))
             });
         })
 
@@ -79,11 +88,3 @@ var getNFLdata = function() {
         // });
     });
 }
-
-
-// $.getJSON( "https://api.sportsdata.io/v3/nfl/scores/json/Teams/2020REG?key=1f5045ebe0954d7a9038e019a0dd7266", function( data ) {
-//         NFLteams = data
-//         console.log(NFLteams)
-//     });
-
-
