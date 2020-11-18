@@ -35,7 +35,6 @@ var getEspnNcaafData = function(currentWeekDetails, NCAAFteams, group, limit) {
         scoreDataInProgress.forEach(game => {allScores.push(game)});
         scoreDataScheduled.forEach(game => {allScores.push(game)});
         scoreDataFinal.forEach(game => {allScores.push(game)});
-        console.log(allScores)
         loadScores(allScores, NCAAFteams, "ESPN")
         loadTeams(NCAAFteams)
         console.log("loaded NCAAF teams: ", moment().format("h:mm"))        
