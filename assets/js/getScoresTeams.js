@@ -2,6 +2,10 @@ var NCAAFteams = []
 var NFLteams = []
 
 var getNCAAFdata = function() {
+    getSportsioNcaafTeams()
+}
+
+var getEspnNcaafTeams = function() {
     $.getJSON( "https://api.sportsdata.io/v3/cfb/scores/json/Teams?key=d43bba91fb3e469cbd7ad2e109656d69", function( teamData ) {
         var currentWeekDetails = null
         var rankedTeams = teamData.filter(team => team.ApRank!=null)
@@ -16,12 +20,13 @@ var getNCAAFdata = function() {
         unRankedTeams.forEach(team => NCAAFteams.push(team))
         $.getJSON( "https://api.sportsdata.io/v3/cfb/scores/json/CurrentSeasonDetails?key=d43bba91fb3e469cbd7ad2e109656d69", function( seasonData ) {
             currentWeekDetails = seasonData
-            getEspnNcaafData(currentWeekDetails, NCAAFteams, 80, 900)
+            getEspnNcaafScores(currentWeekDetails, NCAAFteams, 80, 900)
+            //getSportsioNcaafScores(currentWeekDetails, NCAAFteams)
         });
     });
 }
 
-var getEspnNcaafData = function(currentWeekDetails, NCAAFteams, group, limit) {
+var getEspnNcaafScores = function(currentWeekDetails, NCAAFteams, group, limit) {
     $.getJSON("https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?year=" + currentWeekDetails.Season + "&week=" + currentWeekDetails.ApiWeek + "&groups=" + group + "&limit=" + limit, function (scoreData) {
         var allScores = []
         scoreData = scoreData.events
@@ -39,11 +44,30 @@ var getEspnNcaafData = function(currentWeekDetails, NCAAFteams, group, limit) {
         loadTeams(NCAAFteams)
         console.log("loaded NCAAF teams: ", moment().format("h:mm"))        
     })
-    
-
 }
 
-var getSportsioNcaafData = function(currentWeekDetails, NCAAFteams) {
+var getSportsioNcaafTeams = function() {
+    $.getJSON( "https://api.sportsdata.io/v3/cfb/scores/json/Teams?key=d43bba91fb3e469cbd7ad2e109656d69", function( teamData ) {
+        var currentWeekDetails = null
+        var rankedTeams = teamData.filter(team => team.ApRank!=null)
+        rankedTeams.sort(function (x, y) {
+            return x.ApRank - y.ApRank
+        })
+        var unRankedTeams = teamData.filter(team => team.ConferenceID!=null && team.ApRank===null)
+        unRankedTeams.sort(function (x, y) {
+            return (y.Wins) - (x.Wins);
+        });
+        rankedTeams.forEach(team => NCAAFteams.push(team))
+        unRankedTeams.forEach(team => NCAAFteams.push(team))
+        $.getJSON( "https://api.sportsdata.io/v3/cfb/scores/json/CurrentSeasonDetails?key=d43bba91fb3e469cbd7ad2e109656d69", function( seasonData ) {
+            currentWeekDetails = seasonData
+            getEspnNcaafScores(currentWeekDetails, NCAAFteams, 80, 900)
+            //getSportsioNcaafScores(currentWeekDetails, NCAAFteams)
+        });
+    });
+}
+
+var getSportsioNcaafScores = function(currentWeekDetails, NCAAFteams) {
     $.getJSON( "https://api.sportsdata.io/v3/cfb/scores/json/GamesByWeek/" + currentWeekDetails.Season + "/" + currentWeekDetails.ApiWeek + "?key=d43bba91fb3e469cbd7ad2e109656d69", function( scoreData ) {
         var allScores = []
         scoreData = scoreData.filter(game => (NCAAFteams.some(team => team.TeamID === game.HomeTeamID) || NCAAFteams.some(team => team.TeamID === game.AwayTeamID)))
@@ -74,43 +98,42 @@ var getNFLdata = function() {
                 NFCstandings.forEach(team => totalStandings.push(team))
                 loadTeams(totalStandings, teamData)
             })
-            $.getJSON( "https://api.sportsdata.io/v3/nfl/scores/json/ScoresByWeek/" + currentWeek[0].ApiSeason + "/" + currentWeek[0].Week + "?key=1f5045ebe0954d7a9038e019a0dd7266", function( scoreData ) {
-                var allScores = []
-                var scoreDataInProgress = scoreData.filter(game => game.Status==="InProgress")
-                var scoreDataFinal = scoreData.filter(game => game.Status==="Final")
-                var scoreDataScheduled = scoreData.filter(game => game.Status==="Scheduled")
-                scoreDataInProgress.sort((a, b) => (moment(a.DateTime, "YYYY-MM-DDTH:mm:ss") - moment(b.DateTime, "YYYY-MM-DDTH:mm:ss")))
-                scoreDataFinal.sort((a, b) => (moment(a.DateTime, "YYYY-MM-DDTH:mm:ss") - moment(b.DateTime, "YYYY-MM-DDTH:mm:ss")))
-                scoreDataScheduled.sort((a, b) => (moment(a.DateTime, "YYYY-MM-DDTH:mm:ss") - moment(b.DateTime, "YYYY-MM-DDTH:mm:ss")))
-                scoreDataInProgress.forEach(game => {allScores.push(game)});
-                scoreDataScheduled.forEach(game => {allScores.push(game)});
-                scoreDataFinal.forEach(game => {allScores.push(game)});
-                loadScores(allScores, teamData)
-                console.log("loaded NFL teams: ", moment().format("h:mm"))
-            });
+            getEspnNflScores(currentWeek, teamData)
+            // getSportsioNflScores(currentWeek, teamData)
         })
+    });
+}
 
-        // var currentWeekDetails = null        
-        // $.getJSON( "https://api.sportsdata.io/v3/cfb/scores/json/CurrentSeasonDetails?key=d43bba91fb3e469cbd7ad2e109656d69", function( seasonData ) {
-        //     currentWeekDetails = seasonData
-        //     $.getJSON( "https://api.sportsdata.io/v3/cfb/scores/json/GamesByWeek/" + currentWeekDetails.Season + "/" + currentWeekDetails.ApiWeek + "?key=d43bba91fb3e469cbd7ad2e109656d69", function( scoreData ) {
-        //         NCAAFteams = teamData.filter(team => team.ConferenceID!=null)
-        //         var allScores = []
-        //         scoreData = scoreData.filter(game => (NCAAFteams.some(team => team.TeamID === game.HomeTeamID) || NCAAFteams.some(team => team.TeamID === game.AwayTeamID)))
-        //         scoreData = scoreData.filter(game => (game.Status!="Canceled" && game.Status!="Postponed"))
-        //         var scoreDataInProgress = scoreData.filter(game => game.Status==="InProgress")
-        //         var scoreDataFinal = scoreData.filter(game => game.Status==="Final")
-        //         var scoreDataScheduled = scoreData.filter(game => game.Status==="Scheduled")
-        //         scoreDataInProgress.sort((a, b) => (moment(a.DateTime, "YYYY-MM-DDTH:mm:ss") - moment(b.DateTime, "YYYY-MM-DDTH:mm:ss")))
-        //         scoreDataFinal.sort((a, b) => (moment(a.DateTime, "YYYY-MM-DDTH:mm:ss") - moment(b.DateTime, "YYYY-MM-DDTH:mm:ss")))
-        //         scoreDataScheduled.sort((a, b) => (moment(a.DateTime, "YYYY-MM-DDTH:mm:ss") - moment(b.DateTime, "YYYY-MM-DDTH:mm:ss")))
-        //         scoreDataInProgress.forEach(game => {allScores.push(game)});
-        //         scoreDataScheduled.forEach(game => {allScores.push(game)});
-        //         scoreDataFinal.forEach(game => {allScores.push(game)});
-        //         console.log(allScores)
-        //         loadScores(allScores, teamData)
-        //         loadTeams(NCAAFteams)
-        //     })
-        // });
+var getEspnNflScores = function(currentWeek, teamData) {
+    $.getJSON( "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?year=" + currentWeek[0].Season + "&week=" + currentWeek[0].Week, function( scoreData ) {
+        var allScores = []
+        var scoreDataInProgress = scoreData.events.filter(game => game.status.type.id==="2")
+        var scoreDataFinal = scoreData.events.filter(game => game.status.type.id==="3")
+        var scoreDataScheduled = scoreData.events.filter(game => game.status.type.id==="1")
+        scoreDataInProgress.sort((a, b) => (moment.utc(a.date, "YYYY-MM-DDTH:mmZ") - moment.utc(b.date, "YYYY-MM-DDTH:mmZ")))
+        scoreDataFinal.sort((a, b) => (moment.utc(a.DateTime, "YYYY-MM-DDTH:mmZ") - moment.utc(b.date, "YYYY-MM-DDTH:mmZ")))
+        scoreDataScheduled.sort((a, b) => (moment.utc(a.DateTime, "YYYY-MM-DDTH:mmZ") - moment.utc(b.date, "YYYY-MM-DDTH:mmZ")))
+        scoreDataInProgress.forEach(game => {allScores.push(game)});
+        scoreDataScheduled.forEach(game => {allScores.push(game)});
+        scoreDataFinal.forEach(game => {allScores.push(game)});
+        loadScores(allScores, teamData, "ESPN")
+        console.log("loaded NFL teams: ", moment().format("h:mm"))
+    });
+}
+
+var getSportsioNflScores = function(currentWeek, teamData) {
+    $.getJSON( "https://api.sportsdata.io/v3/nfl/scores/json/ScoresByWeek/" + currentWeek[0].ApiSeason + "/" + currentWeek[0].Week + "?key=1f5045ebe0954d7a9038e019a0dd7266", function( scoreData ) {
+        var allScores = []
+        var scoreDataInProgress = scoreData.filter(game => game.Status==="InProgress")
+        var scoreDataFinal = scoreData.filter(game => game.Status==="Final")
+        var scoreDataScheduled = scoreData.filter(game => game.Status==="Scheduled")
+        scoreDataInProgress.sort((a, b) => (moment(a.DateTime, "YYYY-MM-DDTH:mm:ss") - moment(b.DateTime, "YYYY-MM-DDTH:mm:ss")))
+        scoreDataFinal.sort((a, b) => (moment(a.DateTime, "YYYY-MM-DDTH:mm:ss") - moment(b.DateTime, "YYYY-MM-DDTH:mm:ss")))
+        scoreDataScheduled.sort((a, b) => (moment(a.DateTime, "YYYY-MM-DDTH:mm:ss") - moment(b.DateTime, "YYYY-MM-DDTH:mm:ss")))
+        scoreDataInProgress.forEach(game => {allScores.push(game)});
+        scoreDataScheduled.forEach(game => {allScores.push(game)});
+        scoreDataFinal.forEach(game => {allScores.push(game)});
+        loadScores(allScores, teamData, "SportsIO")
+        console.log("loaded NFL teams: ", moment().format("h:mm"))
     });
 }
