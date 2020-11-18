@@ -22,7 +22,7 @@ var getNCAAFdata = function() {
 }
 
 var getEspnNcaafData = function(currentWeekDetails, NCAAFteams, group, limit) {
-    $.getJSON("http://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?year=" + currentWeekDetails.Season + "&week=" + currentWeekDetails.ApiWeek + "&groups=" + group + "&limit=" + limit, function (scoreData) {
+    $.getJSON("https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?year=" + currentWeekDetails.Season + "&week=" + currentWeekDetails.ApiWeek + "&groups=" + group + "&limit=" + limit, function (scoreData) {
         var allScores = []
         scoreData = scoreData.events
         scoreData = scoreData.filter(game => (game.status.type.id!="5" && game.status.type.id!="6"))
