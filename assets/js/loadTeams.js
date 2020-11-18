@@ -3,6 +3,7 @@ var loadTeams = function(arr, website, teams) {
     var teamDivContainer = $("<div>").addClass("container")
     var currentNFLconf = "AFC"
     var firstEl = true
+    var NFLi = 1
     arr.forEach(element => {
         if(currentNav.currentLeague==="NCAAF"){
             if(website === "ESPN") {
@@ -11,13 +12,25 @@ var loadTeams = function(arr, website, teams) {
                 var teamDivRow = loadSportsioNCAAFTeamRow(element)
             }
         } else if (currentNav.currentLeague==="NFL"){
-            if(element.Conference != currentNFLconf || firstEl ) {
-                firstEl = false
-                currentNFLconf = element.Conference
-                var confDivRow = $("<div>").addClass("row no-gutters conf-header").html("<h3>" + currentNFLconf + "</h3>")
-                teamDivContainer.append(confDivRow)
+            if(website === "ESPN") {
+                if (NFLi === 1) {
+                    var confDivRow = $("<div>").addClass("row no-gutters conf-header").html("<h3>AFC</h3>")
+                    teamDivContainer.append(confDivRow)
+                } else if (NFLi === 17) {
+                    var confDivRow = $("<div>").addClass("row no-gutters conf-header").html("<h3>NFC</h3>")
+                    teamDivContainer.append(confDivRow)
+                }
+                var teamDivRow = loadEspnNFLTeamRow(element, teams, NFLi)
+                NFLi++
+            } else if (website === "SportsIO") {
+                if(element.Conference != currentNFLconf || firstEl ) {
+                    firstEl = false
+                    currentNFLconf = element.Conference
+                    var confDivRow = $("<div>").addClass("row no-gutters conf-header").html("<h3>" + currentNFLconf + "</h3>")
+                    teamDivContainer.append(confDivRow)
+                }
+                var teamDivRow = loadSportsioNFLTeamRow(element, teams)
             }
-            var teamDivRow = loadNFLTeamRow(element, teams)
         }
         teamDivContainer.append(teamDivRow)
     });
@@ -89,7 +102,43 @@ var loadSportsioNCAAFTeamRow = function(team) {
     return teamDivRow
 }
 
-var loadNFLTeamRow = function(team, teams) {
+var loadEspnNFLTeamRow = function(rankTeam, teams, rank) {
+
+    var usedTeam = teams.find(team => team.team.id===rankTeam.team.id).team
+
+    teamDivRow = $("<div>").addClass("row no-gutters team-row")
+
+    var confRankDiv = $("<div>").addClass("col-1 rank-container d-flex justify-content-center")
+    var confRank = $("<h5>").addClass("conf-rank")
+    if (rank > 16) {
+        confRank.text(rank-16)
+    } else {
+        confRank.text(rank)
+    }
+
+    var teamImgDiv = $("<div>").addClass("col-3 img-container d-flex justify-content-center")
+    var teamImg = $("<img>")
+        .addClass("team-img")
+    teamImg.attr("src", usedTeam.logos[0].href)
+    
+    var teamNameDiv = $("<div>").addClass("col-6 team-name-container")
+    var teamName = $("<h5>").addClass("team-name").text(usedTeam.displayName)
+
+    var teamRecordDiv = $("<div>").addClass("col-2 team-record-container d-flex justify-content-center")
+    var teamRecord = $("<p>").addClass("team-record")
+    teamRecord.text(usedTeam.record.items[0].summary)
+    
+    confRankDiv.append(confRank)
+    teamImgDiv.append(teamImg)
+    teamNameDiv.append(teamName)
+    teamRecordDiv.append(teamRecord)
+
+    teamDivRow.append(confRankDiv, teamImgDiv, teamNameDiv, teamRecordDiv)
+
+    return teamDivRow
+}
+
+var loadSportsioNFLTeamRow = function(team, teams) {
 
     teamDivRow = $("<div>").addClass("row no-gutters team-row")
 

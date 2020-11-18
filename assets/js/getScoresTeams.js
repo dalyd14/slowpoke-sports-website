@@ -1,11 +1,17 @@
 var NCAAFteams = []
 var NFLteams = []
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+/////////// NCAAF DATA
+///////////////////////////////////////////////////////////////////////////////////////////////////
 var getNCAAFdata = function() {
     //getSportsioNcaafTeams()
     getEspnNcaafTeams(80)
 }
 
+    ///////////////////////////////////////
+    //// ESPN NCAAF API
+    ///////////////////////////////////////
 var getEspnNcaafTeams = function(group) {
     $.getJSON( "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams?groups=" + group + "&limit=900", function( teamData ) {
         var currentWeekDetails = null
@@ -61,7 +67,9 @@ var getEspnNcaafScores = function(currentWeekDetails, NCAAFteams, group, limit) 
         console.log("loaded NCAAF teams: ", moment().format("h:mm"))        
     })
 }
-
+    ///////////////////////////////////////
+    //// SportsIO NCAAF API
+    ///////////////////////////////////////
 var getSportsioNcaafTeams = function() {
     $.getJSON( "https://api.sportsdata.io/v3/cfb/scores/json/Teams?key=d43bba91fb3e469cbd7ad2e109656d69", function( teamData ) {
         var currentWeekDetails = null
@@ -102,20 +110,31 @@ var getSportsioNcaafScores = function(currentWeekDetails, NCAAFteams, teamData) 
     })
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+/////////// NFL DATA
+///////////////////////////////////////////////////////////////////////////////////////////////////
 var getNFLdata = function() {
-    $.getJSON( "https://api.sportsdata.io/v3/nfl/scores/json/Teams?key=1f5045ebe0954d7a9038e019a0dd7266", function( teamData ) {
+    //getSportsioNflTeams()
+    getEspnNflTeams()
+}
+
+    ///////////////////////////////////////
+    //// ESPN NFL API
+    ///////////////////////////////////////
+var getEspnNflTeams = function(){
+    $.getJSON( "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams?limit=900", function( teamData ) {
         $.getJSON("https://api.sportsdata.io/v3/nfl/scores/json/Timeframes/current?key=1f5045ebe0954d7a9038e019a0dd7266", function(currentWeek) {
-            $.getJSON("https://api.sportsdata.io/v3/nfl/scores/json/Standings/" + currentWeek[0].ApiSeason + "?key=1f5045ebe0954d7a9038e019a0dd7266", function(currentStandings) {
-                var totalStandings = currentStandings.filter(team => team.Conference==="AFC")
-                var NFCstandings = currentStandings.filter(team => team.Conference==="NFC")
-                totalStandings.sort((a, b) => (a.ConferenceRank - b.ConferenceRank))
-                NFCstandings.sort((a, b) => (a.ConferenceRank - b.ConferenceRank))
+            $.getJSON("https://site.api.espn.com/apis/v2/sports/football/nfl/standings", function( standings ) {
+                teamData = teamData.sports[0].leagues[0].teams
+                var totalStandings = standings.children.find(league => league.abbreviation==="AFC").standings.entries
+                var NFCstandings =  standings.children.find(league => league.abbreviation==="NFC").standings.entries
+                totalStandings.sort((a, b) => (a.stats.find(stat => stat.name==="playoffSeed").value - b.stats.find(stat => stat.name==="playoffSeed").value))
+                NFCstandings.sort((a, b) => (a.stats.find(stat => stat.name==="playoffSeed").value - b.stats.find(stat => stat.name==="playoffSeed").value))
                 NFCstandings.forEach(team => totalStandings.push(team))
                 loadTeams(totalStandings, "ESPN", teamData)
-            })
-            getEspnNflScores(currentWeek, teamData)
-            // getSportsioNflScores(currentWeek, teamData)
-        })
+                getEspnNflScores(currentWeek, teamData)
+            });
+        });
     });
 }
 
@@ -133,6 +152,24 @@ var getEspnNflScores = function(currentWeek, teamData) {
         scoreDataFinal.forEach(game => {allScores.push(game)});
         loadScores(allScores, teamData, "ESPN")
         console.log("loaded NFL teams: ", moment().format("h:mm"))
+    });
+}
+    ///////////////////////////////////////
+    //// SportsIO NFL API
+    ///////////////////////////////////////
+var getSportsioNflTeams = function(){
+    $.getJSON( "https://api.sportsdata.io/v3/nfl/scores/json/Teams?key=1f5045ebe0954d7a9038e019a0dd7266", function( teamData ) {
+        $.getJSON("https://api.sportsdata.io/v3/nfl/scores/json/Timeframes/current?key=1f5045ebe0954d7a9038e019a0dd7266", function(currentWeek) {
+            $.getJSON("https://api.sportsdata.io/v3/nfl/scores/json/Standings/" + currentWeek[0].ApiSeason + "?key=1f5045ebe0954d7a9038e019a0dd7266", function(currentStandings) {
+                var totalStandings = currentStandings.filter(team => team.Conference==="AFC")
+                var NFCstandings = currentStandings.filter(team => team.Conference==="NFC")
+                totalStandings.sort((a, b) => (a.ConferenceRank - b.ConferenceRank))
+                NFCstandings.sort((a, b) => (a.ConferenceRank - b.ConferenceRank))
+                NFCstandings.forEach(team => totalStandings.push(team))
+                loadTeams(totalStandings, "SportsIO", teamData)
+            })
+            getSportsioNflScores(currentWeek, teamData)
+        })
     });
 }
 
