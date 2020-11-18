@@ -27,20 +27,20 @@ var loadNCAAFTeamRow = function(team) {
     var teamImgDiv = $("<div>").addClass("col-3 img-container")
     var teamImg = $("<img>")
         .addClass("team-img")
-    teamImg.attr("src", team.TeamLogoUrl)
+    teamImg.attr("src", team.team.logos[0].href)
 
     var teamRankDiv = $("<div>").addClass("col-1 team-rank-container")
-    if (team.ApRank) {
-        var teamRank = $("<p>").addClass("team-rank").text(team.ApRank)
+    if ("rank" in team.team) {
+        var teamRank = $("<p>").addClass("team-rank").text(team.team.rank)
     } else {
         var teamRank = $("<p>").addClass("team-rank").text("")
     }
     
     var teamNameDiv = $("<div>").addClass("col-6 team-name-container")
-    var teamName = $("<h5>").addClass("team-name").text(team.School + " " + team.Name)
+    var teamName = $("<h5>").addClass("team-name").text(team.team.displayName)
 
-    var teamRecordDiv = $("<div>").addClass("col-2 team-record-container")
-    var teamRecord = $("<p>").addClass("team-record").text(team.Wins + " - " + team.Losses)
+    var teamRecordDiv = $("<div>").addClass("col-2 team-record-container justify-content-center")
+    var teamRecord = $("<p>").addClass("team-record").text(team.team.record.items[0].summary)
 
     teamImgDiv.append(teamImg)
     teamNameDiv.append(teamName)

@@ -51,23 +51,23 @@ var loadEspnNCAAFscoreRow = function(score, teams) {
     // enter the rank for each team
     // first away team
     var awayTeamRankDiv = $("<div>").addClass("col-1 team-rank-container")
-    if (teams.find(team => team.School===score.competitions[0].competitors[1].team.location)){
-        var awayRank = teams.find(team => team.School===score.competitions[0].competitors[1].team.location).ApRank || ""
+    var awayTeamSearch = teams.find(team => team.team.id===score.competitions[0].competitors[1].team.id)
+    if (awayTeamSearch && "rank" in awayTeamSearch.team){
+        var awayRank = awayTeamSearch.team.rank
     } else {
-        console.log(score.name)
+        var awayRank = ""
     }
-    
     var awayTeamRank = $("<h6>").addClass("team-rank").text(awayRank)
     
     // next home team
     var homeTeamRankDiv = $("<div>").addClass("col-1 team-rank-container")
-    if (teams.find(team => team.School===score.competitions[0].competitors[0].team.location)){
-        var awayRank = teams.find(team => team.School===score.competitions[0].competitors[0].team.location).ApRank || ""
+    var homeTeamSearch = teams.find(team => team.team.id===score.competitions[0].competitors[0].team.id)
+    if (homeTeamSearch && "rank" in homeTeamSearch.team){
+        var homeRank = teams.find(team => team.team.id===score.competitions[0].competitors[0].team.id).team.rank
     } else {
-        console.log(score.name)
+        var homeRank = ""
     }
-    
-    var homeTeamRank = $("<h6>").addClass("team-rank").text("")
+    var homeTeamRank = $("<h6>").addClass("team-rank").text(homeRank)
 
     // load in the team names for both teams
     // first away team
@@ -77,18 +77,6 @@ var loadEspnNCAAFscoreRow = function(score, teams) {
     // first away team
     var homeTeamNameDiv = $("<div>").addClass("col-7 team-name-container")
     var homeTeamName = $("<h5>").addClass("team-name").text(score.competitions[0].competitors[0].team.location)
-    
-    // // load records
-    // // first away team
-    // var awayTeamRecordDiv = $("<div>").addClass("col-2 team-record-container")
-    // var awayRecord = teams.find(team => team.TeamID===score.AwayTeamID).Wins + " - " + teams.find(team => team.TeamID===score.AwayTeamID).Losses
-    // var awayTeamRecord = $("<p>").addClass("team-record").text(awayRecord)
-    // awayTeamRecordDiv.append(awayTeamRecord)
-    // // next home team
-    // var homeTeamRecordDiv = $("<div>").addClass("col-2 team-record-container")
-    // var homeRecord = teams.find(team => team.TeamID===score.HomeTeamID).Wins + " - " + teams.find(team => team.TeamID===score.HomeTeamID).Losses
-    // var homeTeamRecord = $("<p>").addClass("team-record").text(homeRecord)
-    // homeTeamRecordDiv.append(homeTeamRecord)
 
     // get the scores
     // first away team

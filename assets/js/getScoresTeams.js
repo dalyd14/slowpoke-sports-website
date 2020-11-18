@@ -2,26 +2,42 @@ var NCAAFteams = []
 var NFLteams = []
 
 var getNCAAFdata = function() {
-    getSportsioNcaafTeams()
+    //getSportsioNcaafTeams()
+    getEspnNcaafTeams(80)
 }
 
-var getEspnNcaafTeams = function() {
-    $.getJSON( "https://api.sportsdata.io/v3/cfb/scores/json/Teams?key=d43bba91fb3e469cbd7ad2e109656d69", function( teamData ) {
+var getEspnNcaafTeams = function(group) {
+    $.getJSON( "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams?groups=" + group + "&limit=900", function( teamData ) {
         var currentWeekDetails = null
-        var rankedTeams = teamData.filter(team => team.ApRank!=null)
-        rankedTeams.sort(function (x, y) {
-            return x.ApRank - y.ApRank
-        })
-        var unRankedTeams = teamData.filter(team => team.ConferenceID!=null && team.ApRank===null)
-        unRankedTeams.sort(function (x, y) {
-            return (y.Wins) - (x.Wins);
-        });
-        rankedTeams.forEach(team => NCAAFteams.push(team))
-        unRankedTeams.forEach(team => NCAAFteams.push(team))
-        $.getJSON( "https://api.sportsdata.io/v3/cfb/scores/json/CurrentSeasonDetails?key=d43bba91fb3e469cbd7ad2e109656d69", function( seasonData ) {
-            currentWeekDetails = seasonData
-            getEspnNcaafScores(currentWeekDetails, NCAAFteams, 80, 900)
-            //getSportsioNcaafScores(currentWeekDetails, NCAAFteams)
+        teamData = teamData.sports[0].leagues[0].teams
+        $.getJSON("https://site.api.espn.com/apis/site/v2/sports/football/college-football/rankings", function(rankingData) {
+            var rankedTeams = teamData.filter(team => rankingData.rankings[0].ranks.find(function(rank){
+                if(rank.team.id===team.team.id) {
+                    team.team.rank = rank.current
+                    return true
+                } else {
+                    return false
+                }
+            }))
+            rankedTeams.sort(function (x, y) {
+                return x.team.rank - y.team.rank
+            })
+            
+            var unRankedTeams =[]
+            teamData.forEach(function(team) {
+                if(!rankedTeams.find(rank => rank.team.id === team.team.id)) {
+                    unRankedTeams.push(team)
+                }
+            })
+            unRankedTeams.sort(function (x, y) {
+                return (y.team.record.items[0].stats.find(stat => stat.name==="winPercent").value) - (x.team.record.items[0].stats.find(stat => stat.name==="winPercent").value);
+            });
+            rankedTeams.forEach(team => NCAAFteams.push(team))
+            unRankedTeams.forEach(team => NCAAFteams.push(team))
+            $.getJSON( "https://api.sportsdata.io/v3/cfb/scores/json/CurrentSeasonDetails?key=d43bba91fb3e469cbd7ad2e109656d69", function( seasonData ) {
+                currentWeekDetails = seasonData
+                getEspnNcaafScores(currentWeekDetails, NCAAFteams, 80, 900)
+            });            
         });
     });
 }
