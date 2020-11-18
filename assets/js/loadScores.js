@@ -1,3 +1,6 @@
+//////////////////////////////////////////////////////////////////////////////////
+////////////// LOADING SCORE DATA FOR NCAAF AND NFL
+//////////////////////////////////////////////////////////////////////////////////
 var loadScores = function(scoresArr, teamsArr, website) {
     $("#scores").empty()
     var scoresDivContainer = $("<div>").addClass("container-fluid")
@@ -20,6 +23,13 @@ var loadScores = function(scoresArr, teamsArr, website) {
     $("#scores").append(scoresDivContainer)
 }
 
+//////////////////////////////////////////////////////////////////////////////////
+////////////// LOADING INDIVIDUAL SCORE ROW FOR NCAAF
+//////////////////////////////////////////////////////////////////////////////////
+
+        /////////////////////////////////////////////////////////////
+        ////// ESPN API FOR NCAAF SCORES
+        /////////////////////////////////////////////////////////////
 var loadEspnNCAAFscoreRow = function(score, teams) {
     // make the div that will hold the individual row
     var scoreDivRow = $("<div>").addClass("row score-row")
@@ -180,7 +190,9 @@ var loadEspnNCAAFscoreRow = function(score, teams) {
 
     return scoreDivRow
 }
-
+        /////////////////////////////////////////////////////////////
+        ////// SPORTSIO API FOR NCAAF SCORES
+        /////////////////////////////////////////////////////////////
 var loadSportsioNCAAFscoreRow = function(score, teams) {
     // make the div that will hold the individual row
     var scoreDivRow = $("<div>").addClass("row score-row")
@@ -320,6 +332,13 @@ var loadSportsioNCAAFscoreRow = function(score, teams) {
     return scoreDivRow
 }
 
+//////////////////////////////////////////////////////////////////////////////////
+////////////// LOADING INDIVIDUAL SCORE ROW FOR NFL
+//////////////////////////////////////////////////////////////////////////////////
+
+        /////////////////////////////////////////////////////////////
+        ////// ESPN API FOR NFL SCORES
+        /////////////////////////////////////////////////////////////
 var loadEspnNFLscoreRow = function(score) {
     // make the div that will hold the individual row
     var scoreDivRow = $("<div>").addClass("row score-row")
@@ -451,7 +470,9 @@ var loadEspnNFLscoreRow = function(score) {
 
     return scoreDivRow
 }
-
+        /////////////////////////////////////////////////////////////
+        ////// SPORTSIO API FOR NFL SCORES
+        /////////////////////////////////////////////////////////////
 var loadSportsioNFLscoreRow = function(score, teams) {
     // make the div that will hold the individual row
     var scoreDivRow = $("<div>").addClass("row score-row")
