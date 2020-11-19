@@ -123,7 +123,7 @@ var loadEspnNCAAFscoreRow = function(score, teams) {
             homeTeamScore.addClass("lost")
             homeTeamName.addClass("lost")
         }
-    } else if (score.status.type.id === "2") {
+    } else if (score.status.type.id[0] === "2") {
         var status = ""
         switch (score.status.period) {
             case 1:
@@ -139,7 +139,7 @@ var loadEspnNCAAFscoreRow = function(score, teams) {
                 status = "4th Qtr";
                 break;
             default:
-                status = score.status.period
+                status = score.status.type.description
         }
         var quarter = $("<h5>").addClass("quarter").text(status)
     } else if (score.status.type.id === "1") {

@@ -53,7 +53,7 @@ var getEspnNcaafScores = function(currentWeekDetails, NCAAFteams, group, limit) 
         var allScores = []
         scoreData = scoreData.events
         scoreData = scoreData.filter(game => (game.status.type.id!="5" && game.status.type.id!="6"))
-        var scoreDataInProgress = scoreData.filter(game => game.status.type.id==="2")
+        var scoreDataInProgress = scoreData.filter(game => game.status.type.id[0]==="2")
         var scoreDataFinal = scoreData.filter(game => game.status.type.id==="3")
         var scoreDataScheduled = scoreData.filter(game => game.status.type.id==="1")
         scoreDataInProgress.sort((a, b) => (moment.utc(a.date, "YYYY-MM-DDTH:mmZ") - moment.utc(b.date, "YYYY-MM-DDTH:mmZ")))
