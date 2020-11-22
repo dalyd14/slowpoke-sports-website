@@ -91,14 +91,14 @@ var loadEspnNCAAFscoreRow = function(score, teams) {
     // get the scores
     // first away team
     var awayTeamScoreDiv = $("<div>").addClass("col-2 team-score-container")
-    var awayScore = score.competitions[0].competitors[1].score || ""
+    var awayScore = parseInt(score.competitions[0].competitors[1].score)
     var awayTeamScore = $("<h5>").addClass("score").text(awayScore)
     
-    // first away team
+    // next home team
     var homeTeamScoreDiv = $("<div>").addClass("col-2 team-score-container")
-    var homeScore = score.competitions[0].competitors[0].score || ""
+    var homeScore = parseInt(score.competitions[0].competitors[0].score)
     var homeTeamScore = $("<h5>").addClass("score").text(homeScore)
-    
+
     var homeWin = homeScore > awayScore
 
     // get the quarter and time
@@ -379,13 +379,14 @@ var loadEspnNFLscoreRow = function(score) {
     // get the scores
     // first away team
     var awayTeamScoreDiv = $("<div>").addClass("col-2 team-score-container")
-    var awayScore = score.competitions[0].competitors[1].score
+    var awayScore = parseInt(score.competitions[0].competitors[1].score)
     var awayTeamScore = $("<h5>").addClass("score").text(awayScore)
     
     // first away team
     var homeTeamScoreDiv = $("<div>").addClass("col-2 team-score-container")
-    var homeScore = score.competitions[0].competitors[0].score
+    var homeScore = parseInt(score.competitions[0].competitors[0].score)
     var homeTeamScore = $("<h5>").addClass("score").text(homeScore)
+
     var homeWin = homeScore > awayScore
     
     // get the quarter and time
