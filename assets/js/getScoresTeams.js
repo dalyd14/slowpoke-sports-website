@@ -141,7 +141,7 @@ var getEspnNflTeams = function(){
 var getEspnNflScores = function(currentWeek, teamData) {
     $.getJSON( "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?year=" + currentWeek[0].Season + "&week=" + currentWeek[0].Week, function( scoreData ) {
         var allScores = []
-        var scoreDataInProgress = scoreData.events.filter(game => game.status.type.id==="2")
+        var scoreDataInProgress = scoreData.events.filter(game => game.status.type.id[0]==="2")
         var scoreDataFinal = scoreData.events.filter(game => game.status.type.id==="3")
         var scoreDataScheduled = scoreData.events.filter(game => game.status.type.id==="1")
         scoreDataInProgress.sort((a, b) => (moment.utc(a.date, "YYYY-MM-DDTH:mmZ") - moment.utc(b.date, "YYYY-MM-DDTH:mmZ")))
