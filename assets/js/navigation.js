@@ -1,3 +1,5 @@
+var scoreUpdateInterval = null
+
 $("#navbar-list").on( "click","a", function(){
     currentNav.currentLeague = $(this).attr("id").replace("-link", "")
     localStorage.setItem('slowpokeNav', JSON.stringify(currentNav))
@@ -15,6 +17,7 @@ $(".navbar-collapse").on("click", "ul li a", function(){
 
 var changePage = function(id) {
     $("#navbar-list li a").removeClass("active");
+    clearInterval(scoreUpdateInterval)
     if (id === "NFL") {
         clearContent("news")
         clearContent("scores")
@@ -22,12 +25,18 @@ var changePage = function(id) {
         getNFLnews()
         getNFLdata()
         $("#" + id + "-link").addClass("active");
+        scoreUpdateInterval = setInterval(function(){
+            getNFLdata()
+        }, 1000 * 30)
     } else if (id === "NCAAF") {
         clearContent("news")
         clearContent("scores")
         clearContent("teams")
         getNCAAFdata()
         $("#" + id + "-link").addClass("active");
+        scoreUpdateInterval = setInterval(function(){
+            getNCAAFdata()
+        }, 1000 * 30)
     }
 }
 
