@@ -407,29 +407,25 @@ var loadEspnNFLscoreRow = function(score) {
             homeTeamScore.addClass("lost")
             homeTeamName.addClass("lost")
         }
-    } else if (score.status.type.id === "2") {
-        if (score.status.period === 5 || (score.status.period===2 && score.status.displayClock==="0:00")) {
-            var quarter = $("<h5>").addClass("quarter").text(score.status.period)
-        } else {
-            var status = ""
-            switch (score.status.period) {
-                case 1:
-                    status = "1st Qtr";
-                    break;
-                case 2:
-                    status = "2nd Qtr";
-                    break;
-                case 3:
-                    status = "3rd Qtr";
-                    break;
-                case 4:
-                    status = "4th Qtr";
-                    break;
-                default:
-                    status = score.status.period
-            }
-            var quarter = $("<h5>").addClass("quarter").text(status)
+    } else if (score.status.type.id[0] === "2") {
+        var status = ""
+        switch (score.status.period) {
+            case 1:
+                status = "1st Qtr";
+                break;
+            case 2:
+                status = "2nd Qtr";
+                break;
+            case 3:
+                status = "3rd Qtr";
+                break;
+            case 4:
+                status = "4th Qtr";
+                break;
+            default:
+                status = score.status.type.description
         }
+        var quarter = $("<h5>").addClass("quarter").text(status)
     } else if (score.status.type.id === "1") {
         awayTeamScore.text("")
         homeTeamScore.text("")
