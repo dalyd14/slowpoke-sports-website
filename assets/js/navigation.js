@@ -36,7 +36,7 @@ var changePage = function(id) {
         $("#" + id + "-link").addClass("active");
         scoreUpdateInterval = setInterval(function(){
             getNCAAFdata()
-        }, 1000 * 30)
+        }, 1000 * 15)
     }
 }
 
