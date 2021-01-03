@@ -1,6 +1,3 @@
-var NCAAFteams = []
-var NFLteams = []
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 /////////// NCAAF DATA
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -14,6 +11,7 @@ var getNCAAFdata = function() {
     ///////////////////////////////////////
 var getEspnNcaafTeams = function(group) {
     $.getJSON( "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams?groups=" + group + "&limit=900", function( teamData ) {
+        var NCAAFteams = []
         var currentWeekDetails = null
         teamData = teamData.sports[0].leagues[0].teams
         $.getJSON("https://site.api.espn.com/apis/site/v2/sports/football/college-football/rankings", function(rankingData) {
@@ -35,8 +33,27 @@ var getEspnNcaafTeams = function(group) {
                     unRankedTeams.push(team)
                 }
             })
+
             unRankedTeams.sort(function (x, y) {
-                return (y.team.record.items[0].stats.find(stat => stat.name==="winPercent").value) - (x.team.record.items[0].stats.find(stat => stat.name==="winPercent").value);
+                if ("items" in x.team.record) {
+                    if(x.team.record.items[0].stats.some(stat => stat.name==="winPercent")) {
+                        var xWinPerc = x.team.record.items[0].stats.find(stat => stat.name==="winPercent").value
+                    } else {
+                        var xWinPerc = 0
+                    }
+                } else {
+                    var xWinPerc = 0
+                }
+                if ("items" in y.team.record) {
+                    if(y.team.record.items[0].stats.some(stat => stat.name==="winPercent")) {
+                        var yWinPerc = y.team.record.items[0].stats.find(stat => stat.name==="winPercent").value
+                    } else {
+                        var yWinPerc = 0
+                    }
+                } else {
+                    var yWinPerc = 0
+                }
+                return yWinPerc - xWinPerc;
             });
             rankedTeams.forEach(team => NCAAFteams.push(team))
             unRankedTeams.forEach(team => NCAAFteams.push(team))
@@ -49,7 +66,13 @@ var getEspnNcaafTeams = function(group) {
 }
 
 var getEspnNcaafScores = function(currentWeekDetails, NCAAFteams, group, limit) {
-    $.getJSON("https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?year=" + currentWeekDetails.Season + "&week=" + currentWeekDetails.ApiWeek + "&groups=" + group + "&limit=" + limit, function (scoreData) {
+    if (currentWeekDetails.ApiSeason.slice(currentWeekDetails.ApiSeason.length - 4) === "POST") {
+        var queryString = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?year=" + currentWeekDetails.Season + "&type=3&groups=" + group + "&limit=" + limit    
+    } else {
+        var queryString = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?year=" + currentWeekDetails.Season + "&week=" + currentWeekDetails.ApiWeek + "&groups=" + group + "&limit=" + limit
+    }
+    
+    $.getJSON(queryString, function (scoreData) {
         var allScores = []
         scoreData = scoreData.events
         scoreData = scoreData.filter(game => (game.status.type.id!="5" && game.status.type.id!="6"))
@@ -73,6 +96,7 @@ var getEspnNcaafScores = function(currentWeekDetails, NCAAFteams, group, limit) 
 var getSportsioNcaafTeams = function() {
     $.getJSON( "https://api.sportsdata.io/v3/cfb/scores/json/Teams?key=d43bba91fb3e469cbd7ad2e109656d69", function( teamData ) {
         var currentWeekDetails = null
+        var NCAAFteams = []
         var rankedTeams = teamData.filter(team => team.ApRank!=null)
         rankedTeams.sort(function (x, y) {
             return x.ApRank - y.ApRank

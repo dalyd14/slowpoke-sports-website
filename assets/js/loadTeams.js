@@ -3,6 +3,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 var loadTeams = function(arr, website, teams) {
     $("#teams").empty()
+    console.log(arr)
     var teamDivContainer = $("<div>").addClass("container")
     var currentNFLconf = "AFC"
     var firstEl = true
@@ -67,7 +68,12 @@ var loadEspnNCAAFTeamRow = function(team) {
     var teamName = $("<h5>").addClass("team-name").text(team.team.displayName)
 
     var teamRecordDiv = $("<div>").addClass("col-2 team-record-container justify-content-center")
-    var teamRecord = $("<p>").addClass("team-record").text(team.team.record.items[0].summary)
+    if ("items" in team.team.record) {
+        var thisTeamRecord = team.team.record.items[0].summary
+    } else {
+        var thisTeamRecord = ''
+    }
+    var teamRecord = $("<p>").addClass("team-record").text(thisTeamRecord)
 
     teamImgDiv.append(teamImg)
     teamNameDiv.append(teamName)
