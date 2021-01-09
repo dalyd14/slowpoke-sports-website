@@ -14,6 +14,10 @@ $(".navbar-collapse").on("click", "ul li a", function(){
         $('.navbar-toggler').click();
     }
 });
+$('#dontShowAgain').click(function() {
+    currentNav.showModal = false
+    localStorage.setItem('slowpokeNav', JSON.stringify(currentNav))
+})
 
 var changePage = function(id) {
     $("#navbar-list li a").removeClass("active");
@@ -67,3 +71,6 @@ var clearContent = function(id) {
 
 changePage(currentNav.currentLeague)
 toggleTabs(currentNav.currentTab)
+if (currentNav.showModal) {
+    $('#introModal').modal('show'); 
+}
