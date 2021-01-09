@@ -4,7 +4,7 @@ var navigationLinks = [
 ]
 
 var navigationTabs = [
-    'news',
+    // 'news',
     'scores',
     'teams'
 ]
