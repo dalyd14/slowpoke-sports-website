@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 var loadTeams = function(arr, website, teams) {
     $("#teams").empty()
-    console.log(arr)
+
     var teamDivContainer = $("<div>").addClass("container")
     var currentNFLconf = "AFC"
     var firstEl = true
